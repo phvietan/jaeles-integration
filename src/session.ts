@@ -3,9 +3,9 @@ import fs from 'fs';
 import fsPromise from 'fs/promises';
 import path from 'path';
 
-export type SessionOptions = {
+export type JaelesOptions = {
   endpoint: string;
-  token?: string;
+  token: string;
   username: string;
   password: string;
 }
@@ -24,9 +24,9 @@ export class Session {
    * Create Session instance to store session of Jaeles Server
    *
    * @constructor
-   * @param {SessionOptions} opts - Options include: Jaeles endpoint, Jaeles JWT token, Jaeles username / password
+   * @param {JaelesOptions} opts - Options include: Jaeles endpoint, Jaeles JWT token, Jaeles username / password
    */
-  constructor(opts: SessionOptions) {
+  constructor(opts: JaelesOptions) {
     if (!fs.existsSync(SESSION_FILENAME)) {
       fs.writeFileSync(SESSION_FILENAME, JSON.stringify(opts));
     } else {
@@ -67,11 +67,11 @@ export class Session {
    * Return the usable JWT
    *
    * @function
-   * @param {SessionOptions} sessionOpts - The session options if you want to override the default session
+   * @param {JaelesOptions} sessionOpts - The session options if you want to override the default session
    */
-  async getSession(sessionOpts?: SessionOptions): Promise<string> {
+  async getSession(sessionOpts?: JaelesOptions): Promise<string> {
     const opts = {
-      ...JSON.parse(await fsPromise.readFile(SESSION_FILENAME, 'utf-8')) as SessionOptions,
+      ...JSON.parse(await fsPromise.readFile(SESSION_FILENAME, 'utf-8')) as JaelesOptions,
       ...(sessionOpts || {}),
     };
     let { token } = opts;

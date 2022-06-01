@@ -1,12 +1,14 @@
 import { JaelesApi } from './api';
 import { Session } from './session';
-import { SessionOptions as JaelesOptions } from './session';
+import { JaelesOptions } from './session';
 import { AxiosRequest, requestToBurp } from 'axios-burp';
+
+export { JaelesOptions };
 
 /**
  * @type
  */
-export type AxiosResponseConfig = {
+export type AxiosResponse = {
   headers: string[];
   body: string;
 }
@@ -39,10 +41,14 @@ export class Jaeles {
    * Create Jaeles instance to communicate with Jaeles server
    *
    * @constructor
-   * @param {JaelesOptions} opts - Options include: Jaeles endpoint, Jaeles JWT token, Jaeles username / password
+   * @param {JaelesOptions} opts - Options include: Jaeles endpoint, Jaeles JWT token, Jaeles username, Jaeles password
    */
-  constructor(opts: JaelesOptions) {
-    this.session = new Session(opts);
+  constructor(opts: Partial<JaelesOptions>) {
+    opts.endpoint = opts.endpoint || 'http://127.0.0.1:5000';
+    opts.token = opts.token || '';
+    opts.username = opts.username || '';
+    opts.password = opts.password || '';
+    this.session = new Session(opts as JaelesOptions);
     this.api = new JaelesApi(opts.endpoint);
   }
 
@@ -53,7 +59,7 @@ export class Jaeles {
    * @param {string | AxiosRequest} response - Response that will be sent to Jaeles server
    * @return {string} Base64 string of response
    */
-  #parseResponseBase64(response: string | AxiosResponseConfig): string {
+  #parseResponseBase64(response: string | AxiosResponse): string {
     if (typeof response === 'string') return base64(response);
     const joinedHeaders = response.headers.reduce((prev, cur) => prev + cur + '\r\n', '');
     return base64(joinedHeaders + '\r\n' + response.body);
@@ -97,7 +103,7 @@ export class Jaeles {
    * @param {string | AxiosRequest} response - Response that will be sent to Jaeles server, could be in string format or in object format
    * @param {string?} url - URL of the target server, if request is in string format URL MUST BE presented
    */
-  async sendRequestResponse(request: string | AxiosRequest, response: string | AxiosResponseConfig, url?: string) {
+  async sendRequestResponse(request: string | AxiosRequest, response: string | AxiosResponse, url?: string) {
     if (!url) {
       if (typeof request === 'string') throw new Error('Must specify target server URL because request is in string format');
       url = request.url;

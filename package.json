@@ -1,8 +1,8 @@
 {
   "name": "jaeles-integration",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "1.0.1",
+  "description": "Library to communicate with Jaeles server for fuzzing http servers",
+  "main": "dist/index.js",
   "scripts": {
     "build:dev": "tsc --watch",
     "test": "ts-mocha ./test/**/*_test.ts",
