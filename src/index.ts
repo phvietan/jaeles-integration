@@ -1,4 +1,4 @@
-import { JaelesApi } from './api';
+import JaelesApi from './api';
 import { Session } from './session';
 import { JaelesOptions } from './session';
 import { AxiosRequest, requestToBurp } from 'axios-burp';
@@ -33,7 +33,7 @@ function base64(s: string): string {
  *
  * @class
  */
-export class Jaeles {
+export default class Jaeles {
   session: Session;
   api: JaelesApi;
 
@@ -59,7 +59,7 @@ export class Jaeles {
    * @param {string | AxiosRequest} response - Response that will be sent to Jaeles server
    * @return {string} Base64 string of response
    */
-  #parseResponseBase64(response: string | AxiosResponse): string {
+  private parseResponseBase64(response: string | AxiosResponse): string {
     if (typeof response === 'string') return base64(response);
     const joinedHeaders = response.headers.reduce((prev, cur) => prev + cur + '\r\n', '');
     return base64(joinedHeaders + '\r\n' + response.body);
@@ -72,10 +72,24 @@ export class Jaeles {
    * @param {string | AxiosRequest} request - Request that will be sent to Jaeles server
    * @return {string} Base64 string of request
    */
-  #parseRequestBase64(request: string | AxiosRequest): string {
+  private parseRequestBase64(request: string | AxiosRequest): string {
     const s = (typeof request !== 'string') ? requestToBurp(request, true) : request;
-    console.log(s);
     return base64(s);
+  }
+
+  /**
+   * Health check Jaeles server
+   *
+   * @function
+   */
+  async healthCheck(): Promise<boolean> {
+    try {
+      const jwt = await this.session.getSession();
+      await this.api.ping(jwt);
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
 
   /**
@@ -90,7 +104,7 @@ export class Jaeles {
       if (typeof request === 'string') throw new Error('Must specify target server URL because request is in string format');
       url = request.url;
     }
-    const reqB64 = this.#parseRequestBase64(request);
+    const reqB64 = this.parseRequestBase64(request);
     const jwt = await this.session.getSession();
     return this.api.sendReqRes(jwt, reqB64, '', url);
   }
@@ -108,8 +122,8 @@ export class Jaeles {
       if (typeof request === 'string') throw new Error('Must specify target server URL because request is in string format');
       url = request.url;
     }
-    const reqB64 = this.#parseRequestBase64(request);
-    const resB64 = this.#parseResponseBase64(response);
+    const reqB64 = this.parseRequestBase64(request);
+    const resB64 = this.parseResponseBase64(response);
     const jwt = await this.session.getSession();
     return this.api.sendReqRes(jwt, reqB64, resB64, url);
   }

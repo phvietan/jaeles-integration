@@ -16,7 +16,7 @@ const jaelesInstance = axios.create({
  *
  * @class
  */
-export class JaelesApi {
+export default class JaelesApi {
   endpoint: string;
 
   /**
