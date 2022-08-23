@@ -1,4 +1,4 @@
-import { JaelesApi } from './api';
+import JaelesApi from './api';
 import fs from 'fs';
 import fsPromise from 'fs/promises';
 import path from 'path';
