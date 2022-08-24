@@ -13,6 +13,21 @@ export type JaelesOptions = {
 const SESSION_FILENAME = path.join(__dirname, '.session.json');
 
 /**
+ * Try to read session file
+ *
+ * @function
+ * @return {any}
+ */
+function tryReadSessionFile() {
+  try {
+    const f = JSON.parse(fs.readFileSync(SESSION_FILENAME, 'utf-8'));
+    return f;
+  } catch (err) {
+    return {};
+  }
+}
+
+/**
  * Session class to maintain session connection with Jaeles Server
  *
  * @class
@@ -31,7 +46,7 @@ export class Session {
       fs.writeFileSync(SESSION_FILENAME, JSON.stringify(opts));
     } else {
       const sess = {
-        ...fs.readFileSync(SESSION_FILENAME),
+        ...tryReadSessionFile(),
         ...opts,
       };
       fs.writeFileSync(SESSION_FILENAME, JSON.stringify(sess));
@@ -71,7 +86,7 @@ export class Session {
    */
   async getSession(sessionOpts?: JaelesOptions): Promise<string> {
     const opts = {
-      ...JSON.parse(await fsPromise.readFile(SESSION_FILENAME, 'utf-8')) as JaelesOptions,
+      ...tryReadSessionFile(),
       ...(sessionOpts || {}),
     };
     let { token } = opts;
