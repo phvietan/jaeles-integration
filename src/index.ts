@@ -13,10 +13,6 @@ export type AxiosResponse = {
   body: string;
 }
 
-export type JaelesRequestOption = {
-  burp: string;
-}
-
 /**
  * Convert string utf-8 to base64
  *
