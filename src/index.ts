@@ -3,7 +3,7 @@ import { Session } from './session';
 import { JaelesOptions } from './session';
 import { AxiosRequest, requestToBurp } from 'axios-burp';
 
-export { JaelesOptions };
+export { JaelesOptions, AxiosRequest };
 
 /**
  * @type
@@ -56,7 +56,7 @@ export default class Jaeles {
    * Parse response to base64
    *
    * @function
-   * @param {string | AxiosRequest} response - Response that will be sent to Jaeles server
+   * @param {string | AxiosResponse} response - Response that will be sent to Jaeles server
    * @return {string} Base64 string of response
    */
   private parseResponseBase64(response: string | AxiosResponse): string {
@@ -114,7 +114,7 @@ export default class Jaeles {
    *
    * @function
    * @param {string | AxiosRequest} request - Request that will be sent to Jaeles server, could be in string format or in object format
-   * @param {string | AxiosRequest} response - Response that will be sent to Jaeles server, could be in string format or in object format
+   * @param {string | AxiosResponse} response - Response that will be sent to Jaeles server, could be in string format or in object format
    * @param {string?} url - URL of the target server, if request is in string format URL MUST BE presented
    */
   async sendRequestResponse(request: string | AxiosRequest, response: string | AxiosResponse, url?: string) {
