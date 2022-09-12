@@ -115,7 +115,7 @@ interface AxiosRequest {
   url: string;
   httpVersion?: string;
   method?: HttpMethod;
-  headers?: Record<string, string | number | boolean>;
+  headers?: string[];
   body?: string;
 }
 ```
@@ -125,7 +125,7 @@ interface AxiosRequest {
 | url            | The full url of the target server     | string | ✔️ |
 | httpVersion    | The http version (Default "HTTP/1.1") | string |    |
 | method         | The http method (Default "GET")       |  string |  |
-| headers        | The http headers (Default {})         |  Record<string, any> |  |
+| headers        | The http headers (Default [])         |  string[] |  |
 | body           |  The http body (Default "")           |   string |     |
 
 ```typescript
@@ -135,10 +135,10 @@ async function send() {
   const payload = {
     url: "http://target_server.com/some/path?oops=1",
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer something",
-    },
+    headers: [
+      "Content-Type: application/json",
+      "Authorization: Bearer something",
+    ],
     body: "somebodyhere"
   }
 

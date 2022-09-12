@@ -1,6 +1,6 @@
 {
   "name": "jaeles-integration",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Library to communicate with Jaeles server for fuzzing http servers",
   "main": "dist/index.js",
   "scripts": {
@@ -32,6 +32,6 @@
   },
   "dependencies": {
     "axios": "^0.27.2",
-    "axios-burp": "^1.0.14"
+    "axios-burp": "^1.0.16"
   }
 }
